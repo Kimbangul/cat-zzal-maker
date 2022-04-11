@@ -28,39 +28,7 @@
   </style>
   <body>
     <div id="app"></div>
-    <!-- <h1>1번째 고양이 가라사대</h1>
-    <form>
-      <input type="text" name="name" placeholder="영어 대사를 입력해주세요" />
-      <button type="submit">생성</button>
-    </form>
-    <div class="main-card">
-      <img
-        src="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
-        alt="고양이"
-        width="400"
-      />
-      <button>🤍</button>
-    </div>
-    <ul class="favorites">
-      <li>
-        <img
-          src="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
-          alt="고양이"
-        />
-      </li>
-      <li>
-        <img
-          src="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
-          alt="고양이"
-        />
-      </li>
-      <li>
-        <img
-          src="https://cataas.com/cat/60b73094e04e18001194a309/says/react"
-          alt="고양이"
-        />
-      </li>
-    </ul> -->
+
     <!-- 1. 리액트 스크립트 추가 -->
     <!-- React를 실행. -->
     <!-- 주의: 사이트를 배포할 때는 "development.js"를 "production.min.js"로 대체하세요. -->
@@ -76,16 +44,65 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <!-- 3. script 태그 type을 babel 로 변경  -->
     <script type="text/babel">
-      console.log("야옹");
+      const Title = (props) => {
+        return <h1>{props.children}</h1>;
+        // 태그 안에 적은 내용은 props.children 으로 넘어온다.
+      };
 
-      const catItem = (
-        <li>
-          <img src="https://cataas.com/cat/60b73094e04e18001194a309/says/react" />
-        </li>
+      const CatItem = (props) => {
+        // 리액트 컴포넌트에 인자를 넘기면 첫번째 인자에 다 들어온다.
+        return (
+          <li>
+            <img src={props.img} alt="고양이" style={{ width: "150px" }} />
+          </li>
+          // object 형식으로 style을 넘겨준다.
+          // object 형식으로 넘겨주므로 속성 사이에는 쉼표를 사용
+        );
+      };
+
+      const Form = () => {
+        return (
+          <form>
+            <input
+              type="text"
+              name="name"
+              placeholder="영어 대사를 입력해주세요"
+            />
+            <button type="submit">생성</button>
+          </form>
+        );
+      };
+
+      const MainCard = ({ img }) => {
+        return (
+          <div className="main-card">
+            <img src={img} alt="고양이" width="400" />
+            <button>♡</button>
+          </div>
+        );
+      };
+
+      const Favorites = () => {
+        return (
+          <ul className="favorites">
+            <CatItem img="https://cataas.com/cat/60b73094e04e18001194a309/says/react" />
+            <CatItem img="https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn" />
+          </ul>
+        );
+      };
+
+      const app = (
+        <div>
+          <Title>1번째 고양이 가라사대</Title>
+          <Form />
+          <MainCard img="https://cataas.com/cat/60b73094e04e18001194a309/says/react" />
+          <Favorites />
+        </div>
       );
-      const 여기다가그려 = document.querySelector("#app");
 
-      ReactDOM.render(catItem, 여기다가그려);
+      const App = document.querySelector("#app");
+
+      ReactDOM.render(app, App);
       // jsx 코드인 catItem을 reactDOM.render를 사용해 '여기다가그려'에 그려줌.
     </script>
   </body>
