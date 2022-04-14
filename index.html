@@ -45,8 +45,8 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <!-- 3. script 태그 type을 babel 로 변경  -->
     <script type="text/babel">
-      const Title = (props) => {
-        return <h1>{props.children}</h1>;
+      const Title = ({ children }) => {
+        return <h1>{children}</h1>;
         // 태그 안에 적은 내용은 props.children 으로 넘어온다.
       };
 
@@ -61,12 +61,8 @@
         );
       };
 
-      const Form = () => {
-        function handleFormSubmit(e) {
-          e.preventDefault();
-          // 폼 기본 동작인 refresh 막기
-          console.log("폼 전송됨");
-        }
+      const Form = ({ handleFormSubmit }) => {
+        // ES6 구조분해 문법
         return (
           <form onSubmit={handleFormSubmit}>
             <input
@@ -110,19 +106,53 @@
         );
       };
 
-      const app = (
-        <div>
-          <Title>1번째 고양이 가라사대</Title>
-          <Form />
-          <MainCard img="https://cataas.com/cat/60b73094e04e18001194a309/says/react" />
-          <Favorites />
-        </div>
-      );
+      const App = () => {
+        // 상태 사용을 위해 app을 컴포넌트로 변경
+        const [counter, setCounter] = React.useState(1);
+        // useState의 첫번째, 두번째 인자에 바로 접근 가능!
+        let catImg = [
+          "https://cataas.com/cat/60b73094e04e18001194a309/says/react",
+          "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn",
+          "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript",
+        ];
 
-      const App = document.querySelector("#app");
+        let imgCount = 0;
 
-      ReactDOM.render(app, App);
-      // jsx 코드인 catItem을 reactDOM.render를 사용해 '여기다가그려'에 그려줌.
+        const [mainCatImg, setCatImg] = React.useState(catImg[0]);
+
+        function handleFormSubmit(e) {
+          e.preventDefault();
+          // 폼 기본 동작인 refresh 막기
+          setCounter(counter + 1);
+
+          if (imgCount < catImg.length) {
+            console.log(catImg[imgCount]);
+
+            setCatImg(catImg[2]);
+            imgCount++;
+            console.log(imgCount);
+          } else {
+            setCatImg(catImg[0]);
+            imgCount = 0;
+          }
+        }
+        return (
+          <div>
+            <Title>{counter}번째 고양이 가라사대</Title>
+            <Form handleFormSubmit={handleFormSubmit} />
+            {
+              // props에 자체 함수 넘기기
+            }
+            <MainCard img={mainCatImg} />
+            <Favorites />
+          </div>
+        );
+      };
+
+      const Drawer = document.querySelector("#app");
+
+      ReactDOM.render(<App />, Drawer);
+      //  App을 컴포넌트화하였으므로 함수가 아닌 컴포넌트 형식으로 렌더.
     </script>
   </body>
 </html>
