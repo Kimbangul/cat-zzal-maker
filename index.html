@@ -75,39 +75,21 @@
         );
       };
 
-      const MainCard = ({ img }) => {
-        function handleHeartClick() {
-          console.log("하트눌렀음");
-        }
-        function handleHeartMouseOver() {
-          console.log("하트 스쳐 지나감");
-        }
+      const MainCard = ({ img, handleHeartClick }) => {
         // handle~로 시작하는 것은 리액트의 이벤트 핸들러 네이밍 관례!
         return (
           <div className="main-card">
             <img src={img} alt="고양이" width="400" />
-            <button
-              onClick={handleHeartClick}
-              onMouseOver={handleHeartMouseOver}
-            >
-              ♡
-            </button>
+            <button onClick={handleHeartClick}>♡</button>
           </div>
           // 일반 HTML과 다르게onClick 에서 C가 대문자임에 유의!
         );
       };
 
-      const Favorites = () => {
-        const CAT1 =
-          "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
-        const CAT2 =
-          "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
-        const CAT3 =
-          "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
-        const cats = [CAT1, CAT2, CAT3];
+      const Favorites = ({ favorites }) => {
         return (
           <ul className="favorites">
-            {cats.map((cat) => (
+            {favorites.map((cat) => (
               <CatItem img={cat} key={cat} />
             ))}
             {/*여기서 cat은 cats 배열 안에 있는 cat1, cat2, cat3!*/}
@@ -117,34 +99,38 @@
 
       const App = () => {
         // 상태 사용을 위해 app을 컴포넌트로 변경
+
+        const CAT1 =
+          "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
+        const CAT2 =
+          "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn";
+        const CAT3 =
+          "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
+
+        const [favorites, setFavorites] = React.useState([CAT1, CAT2]);
+
+        let catImg = [CAT1, CAT2, CAT3];
         const [counter, setCounter] = React.useState(1);
-        // useState의 첫번째, 두번째 인자에 바로 접근 가능!
-        let catImg = [
-          "https://cataas.com/cat/60b73094e04e18001194a309/says/react",
-          "https://cataas.com//cat/5e9970351b7a400011744233/says/inflearn",
-          "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript",
-        ];
-
-        let imgCount = 0;
-
         const [mainCatImg, setCatImg] = React.useState(catImg[0]);
 
         function handleFormSubmit(e) {
           e.preventDefault();
-          // 폼 기본 동작인 refresh 막기
-          setCounter(counter + 1);
-
-          if (imgCount < catImg.length) {
-            console.log(catImg[imgCount]);
-
-            setCatImg(catImg[2]);
-            imgCount++;
-            console.log(imgCount);
+          let newImgNum = counter;
+          if (counter < catImg.length) {
+            setCounter(counter + 1);
           } else {
-            setCatImg(catImg[0]);
-            imgCount = 0;
+            setCounter(1);
+            newImgNum = 0;
           }
+          setCatImg(catImg[newImgNum]);
         }
+
+        function handleHeartClick() {
+          console.log("클릭");
+          setFavorites([...favorites, CAT3]);
+          // ES6+ 스프레드 오퍼레이터 문법. 기존의 favorites 배열 뒤에 CAT3를 추가.
+        }
+
         return (
           <div>
             <Title>{counter}번째 고양이 가라사대</Title>
@@ -152,8 +138,8 @@
             {
               // props에 자체 함수 넘기기
             }
-            <MainCard img={mainCatImg} />
-            <Favorites />
+            <MainCard img={mainCatImg} handleHeartClick={handleHeartClick} />
+            <Favorites favorites={favorites} />
           </div>
         );
       };
