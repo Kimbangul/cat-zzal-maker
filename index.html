@@ -62,6 +62,16 @@
       };
 
       const Form = ({ handleFormSubmit }) => {
+        const [value, setValue] = React.useState("");
+
+        const handleInputChange = (e) => {
+          // value값을 대문자로 변경
+          setValue(e.target.value.toUpperCase());
+        };
+
+        const handleOnSubmit = (e) => {
+          e.preventDefault();
+        };
         // ES6 구조분해 문법
         return (
           <form onSubmit={handleFormSubmit}>
@@ -69,6 +79,8 @@
               type="text"
               name="name"
               placeholder="영어 대사를 입력해주세요"
+              onChange={handleInputChange}
+              value={value}
             />
             <button type="submit">생성</button>
           </form>
