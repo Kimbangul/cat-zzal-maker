@@ -143,17 +143,21 @@
         const [favorites, setFavorites] = React.useState([CAT1, CAT2]);
 
         let catImg = [CAT1, CAT2, CAT3];
-        const [counter, setCounter] = React.useState(1);
+        const [counter, setCounter] = React.useState(
+          Number(localStorage.getItem("counter"))
+          // localstorage에서는 값을 String으로 저장하기 때문에 Number()를 통하여 형변환 해주어야 한다.
+        );
         const [mainCatImg, setCatImg] = React.useState(catImg[0]);
 
         function updateMainCat() {
           let newImgNum = counter;
-          if (counter < catImg.length) {
-            setCounter(counter + 1);
+          if (newImgNum < catImg.length) {
+            setCounter(newImgNum + 1);
           } else {
             setCounter(1);
             newImgNum = 0;
           }
+          localStorage.setItem("counter", newImgNum + 1);
           setCatImg(catImg[newImgNum]);
         }
 
