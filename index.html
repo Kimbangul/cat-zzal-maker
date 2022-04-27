@@ -48,6 +48,20 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <!-- 3. script 태그 type을 babel 로 변경  -->
     <script type="text/babel">
+      const jsonLocalStorage = {
+        setItem: (key, value) => {
+          localStorage.setItem(key, JSON.stringify(value));
+          // json.stringify() : JavaScript 값이나 객체를 JSON 문자열로 변환
+
+          //console.log(JSON.stringify([new Number(3), new String('false'), new Boolean(false)]));
+          // expected output: "[3,"false",false]"
+        },
+        getItem: (key) => {
+          return JSON.parse(localStorage.getItem(key));
+          //JSON.parse() 메서드는 JSON 문자열의 구문을 분석하고, 그 결과에서 JavaScript 값이나 객체를 생성합니다.(JSON 문자열을 자바스크립트 객체로 변환)
+          // localStorage에는 data가 무조건 string 으로 들어가는데, json.parse를 사용하면 이런 불편함을 해소할 수 있다.
+        },
+      };
       const Title = ({ children }) => {
         return <h1>{children}</h1>;
         // 태그 안에 적은 내용은 props.children 으로 넘어온다.
@@ -140,12 +154,14 @@
         const CAT3 =
           "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
 
-        const [favorites, setFavorites] = React.useState([CAT1, CAT2]);
+        const [favorites, setFavorites] = React.useState(
+          jsonLocalStorage.getItem("favorites") || []
+          // 'favorites' 에 값이 없을 때(null) 초기값으로 빈 배열을 설정
+        );
 
         let catImg = [CAT1, CAT2, CAT3];
         const [counter, setCounter] = React.useState(
-          Number(localStorage.getItem("counter"))
-          // localstorage에서는 값을 String으로 저장하기 때문에 Number()를 통하여 형변환 해주어야 한다.
+          jsonLocalStorage.getItem("counter")
         );
         const [mainCatImg, setCatImg] = React.useState(catImg[0]);
 
@@ -157,13 +173,15 @@
             setCounter(1);
             newImgNum = 0;
           }
-          localStorage.setItem("counter", newImgNum + 1);
+          jsonLocalStorage.setItem("counter", newImgNum + 1);
           setCatImg(catImg[newImgNum]);
         }
 
         function handleHeartClick() {
-          setFavorites([...favorites, CAT3]);
-          // ES6+ 스프레드 오퍼레이터 문법. 기존의 favorites 배열 뒤에 CAT3를 추가.
+          const nextFavorites = [...favorites, catImg[counter - 1]];
+          // ES6+ 스프레드 오퍼레이터 문법. 기존의 favorites 배열 뒤에 요소 추가.
+          setFavorites(nextFavorites);
+          jsonLocalStorage.setItem("favorites", nextFavorites);
         }
 
         return (
