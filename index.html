@@ -161,7 +161,7 @@
 
         let catImg = [CAT1, CAT2, CAT3];
         const [counter, setCounter] = React.useState(
-          jsonLocalStorage.getItem("counter")
+          jsonLocalStorage.getItem("counter") || 1
         );
         const [mainCatImg, setCatImg] = React.useState(catImg[0]);
 
