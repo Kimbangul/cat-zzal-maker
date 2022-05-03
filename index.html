@@ -70,15 +70,16 @@
   const responseJson = await response.json(); // 응답을 json파일로 변환
   return `${OPEN_API_DOMAIN}/${responseJson.url}`; // img url을 반환
 };
-// const fetchCat = (value) => {
+// const fetchCat =  (value) => {
 //   const OPEN_API_DOMAIN = "https://cataas.com";
-
-//   fetch(`${OPEN_API_DOMAIN}/cat/says/${value}?json=true`)
+//   return new Promise((resolve,reject)=>{
+//         fetch(`${OPEN_API_DOMAIN}/cat/says/${value}?json=true`)
 //   .then((res) => res.json())
 //   .then((resJson) => 
-//    `${OPEN_API_DOMAIN}/${resJson.url}`).catch(e => console.log('에러!'));
+//    resolve(`${OPEN_API_DOMAIN}/${resJson.url}`)).catch(e => console.log('에러!'));
+    
+//   })
 // }
-   
  
 
       const Title = ({ children }) => {
@@ -166,8 +167,16 @@
       const App = () => {
         // 상태 사용을 위해 app을 컴포넌트로 변경
 
+      
+        const setInitialCat = async() => {
+           // await는 async function 안에서만 쓸 수 있기 때문에 함수로 한번 더 감싸준다.
+          const newCat = await fetchCat('First Cat');
+          console.log(newCat);
+       
+        setCatImg(newCat);
+        }
         
-
+        
         const CAT1 =
           "https://cataas.com/cat/60b73094e04e18001194a309/says/react";
         const CAT2 =
@@ -185,6 +194,10 @@
           jsonLocalStorage.getItem("counter") || 1
         );
         const [mainCatImg, setCatImg] = React.useState(catImg[0]);
+
+        React.useEffect(() => {setInitialCat()}, []);
+        React.useEffect(() => {console.log('카운터 증가')}, [counter]);
+
 
        async function updateMainCat(value) {        
           const newCatImg = await fetchCat(value);
