@@ -183,15 +183,19 @@
         const CAT3 =
           "https://cataas.com/cat/595f280b557291a9750ebf65/says/JavaScript";
 
-        const [favorites, setFavorites] = React.useState(
-          jsonLocalStorage.getItem("favorites") || []
+        const [favorites, setFavorites] = React.useState( () =>{
+          // 값을 그대로 쓰는 것이 아니라 익명 함수를 넘김으로써 초기 렌더링에만 실행되게 할 수 있다.
+          return jsonLocalStorage.getItem("favorites") || [];
           // 'favorites' 에 값이 없을 때(null) 초기값으로 빈 배열을 설정
+        }         
         );
         
 
         let catImg = [CAT1, CAT2, CAT3];
-        const [counter, setCounter] = React.useState(
-          jsonLocalStorage.getItem("counter")
+        const [counter, setCounter] = React.useState( () => {
+          return  jsonLocalStorage.getItem("counter");
+        }
+         
         );
         const [mainCatImg, setCatImg] = React.useState(catImg[0]);
 
@@ -201,8 +205,13 @@
 
        async function updateMainCat(value) {        
           const newCatImg = await fetchCat(value);
-          setCounter(counter + 1);
-          jsonLocalStorage.setItem("counter", counter + 1);
+          // setCounter(counter + 1);
+          setCounter((prev) => {
+            // prev = 기존 값, setCounter로 변경하기 전 counter의 값
+            jsonLocalStorage.setItem("counter", prev + 1);
+            return prev + 1;
+          })
+          // jsonLocalStorage.setItem("counter", counter + 1);
           setCatImg(newCatImg);
         }
 
